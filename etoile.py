@@ -1,6 +1,17 @@
+"""Module fournissant une bibliothèque graphique turtle."""
 import turtle
 
+
 def dessiner_branche(longueur, angle):
+    """Dessine les branches d'une étoile.
+
+    Args:
+        longueur (int): Longueur de chaque branche.
+        angle (int): Angle de rotation entre les branches.
+
+    Returns:
+        Dessin dans une nouvelle fenètre
+    """
     for _ in range(5):
         my_art.forward(longueur)
         my_art.right(angle)
@@ -20,4 +31,3 @@ dessiner_branche(longueur_branche, angle_branche)
 
 # Fermer la fenêtre en cliquant
 wn.exitonclick()
-
