@@ -1,3 +1,4 @@
+"""Module fournissant une fonction pour afficher la version de Python."""
 def est_une_voyelle(lettre):
     """
     Vérifie si la lettre donnée est une voyelle.
