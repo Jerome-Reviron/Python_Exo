@@ -6,7 +6,7 @@ class ScrollableCalculator:
         self.master = master
         self.master.title("Calculatrice à 3 boutons")
 
-        self.character_list = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '-', '*', '/', '=']
+        self.character_list = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '-', '*', '/', '=', 'R']
         self.current_index = 0
         self.choices = []
         self.last_click_time = 0  # Variable pour stocker le temps du dernier clic sur le bouton "Valider"
@@ -42,16 +42,20 @@ class ScrollableCalculator:
         self.display.insert(tk.END, new_text)
 
     def validate_choice(self):
+        selected_char = self.character_list[self.current_index]
+        current_text = self.display.get()
+
+        if selected_char == 'R':
+            # Redémarrer l'application si 'R' est sélectionné
+            self.reset_application()
+            return
+
         current_time = time.time()  # Récupérer le temps actuel
+
         if current_time - self.last_click_time < 1:  # Si le dernier clic a eu lieu il y a moins d'une seconde
             # Réinitialiser le programme
-            self.choices = []
-            self.last_click_time = 0
-            self.display.delete(0, tk.END)  # Effacer le texte dans la calculatrice
+            self.reset_application()
         else:
-            selected_char = self.character_list[self.current_index]
-            current_text = self.display.get()
-
             print("Selected Char:", selected_char)
             print("Current Text:", current_text)
 
@@ -90,6 +94,12 @@ class ScrollableCalculator:
                     self.choices = []
 
             self.last_click_time = current_time  # Mettre à jour le temps du dernier clic
+
+    def reset_application(self):
+        # Réinitialiser l'application
+        self.choices = []
+        self.last_click_time = 0
+        self.display.delete(0, tk.END)
 
 if __name__ == "__main__":
     root = tk.Tk()
