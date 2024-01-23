@@ -8,6 +8,7 @@ class ScrollableCalculator:
         self.character_list = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '-', '*', '/', '=']
         self.current_index = 0
         self.choices = []
+        self.validation_pressed = False  # Variable pour suivre si le bouton "Valider" a été pressé
 
         self.display = tk.Entry(master, width=10, font=('Arial', 14))
         self.display.grid(row=0, column=0, columnspan=3, pady=5)
@@ -48,7 +49,7 @@ class ScrollableCalculator:
 
         if selected_char == '=':
             try:
-                if len(self.choices) > 0:
+                if len(self.choices) > 0 and not self.validation_pressed:
                     # Utiliser le résultat précédent et effectuer l'opération avec le nouveau texte (en enlevant le "=" final)
                     previous_result = self.choices[-1]
                     calculation_text = str(previous_result) + current_text.replace('=', '')
@@ -67,6 +68,9 @@ class ScrollableCalculator:
                 print("Error:", e)
                 self.display.delete(0, tk.END)
                 self.display.insert(tk.END, "Erreur")
+
+            # Marquer le bouton "Valider" comme pressé
+            self.validation_pressed = True
         else:
             if current_text:
                 new_text = current_text + selected_char
@@ -74,7 +78,12 @@ class ScrollableCalculator:
                 new_text = selected_char
             self.display.delete(0, tk.END)
             self.display.insert(tk.END, new_text)
-            
+
+            # Réinitialiser les choix si "=" est pressé une deuxième fois
+            if selected_char == '=' and len(self.choices) > 0:
+                self.choices = []
+                self.validation_pressed = False  # Réinitialiser la variable de validation
+
 if __name__ == "__main__":
     root = tk.Tk()
     app = ScrollableCalculator(root)
