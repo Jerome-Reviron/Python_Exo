@@ -1,3 +1,4 @@
+"""Module fournissant une fonction pour afficher la version de Python."""
 def est_une_voyelle(lettre):
     """
     Vérifie si la lettre donnée est une voyelle.
@@ -11,6 +12,13 @@ def est_une_voyelle(lettre):
         case _:
             print(f'La lettre {lettre} n\'est pas une voyelle.')
 
-# Exemples d'utilisation
-lettre_utilisateur = input("Entrez une lettre : ")
-est_une_voyelle(lettre_utilisateur)
+# Exemple d'utilisation
+while True:
+    lettre_utilisateur = input("Entrez une lettre : ").strip()
+
+    # Vérifiez si l'utilisateur a entré une seule lettre alphabétique
+    if len(lettre_utilisateur) == 1 and lettre_utilisateur.isalpha():
+        est_une_voyelle(lettre_utilisateur)
+        break
+    else:
+        print("Veuillez entrer une seule lettre alphabétique.")
