@@ -1,20 +1,28 @@
-import pandas as pd
 import csv
 import os
+import pandas as pd
 
 def add_and_log(numbers, csv_filename='history.csv'):
+    """
+    Addition calculée et stockée dans le fichier "history.csv".
+
+    Args:
+        numbers (list): Liste de nombres fournie par l'utilisateur.
+
+    Returns:
+        float: Résultat calculé et stocké dans le fichier CSV.
+    """
     result = sum(numbers)
 
     file_exists = os.path.isfile(csv_filename)
 
-    with open(csv_filename, mode='a', newline='') as file:
+    with open(csv_filename, mode='a', newline='', encoding='utf-8') as file:
         fieldnames = ['Numbers', 'Result']
         writer = csv.DictWriter(file, fieldnames=fieldnames)
 
         if not file_exists:
             writer.writeheader()
 
-        # Correction ici
         writer.writerow({'Numbers': ' + '.join(map(str, numbers)) + ' = ', 'Result': result})
 
     return result
