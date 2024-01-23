@@ -19,21 +19,21 @@ def dessiner_branche(longueur, angle):
         my_art.left(2 * angle)
 
 # Initialiser la fenêtre et la tortue
-wn = turtle.Screen()
+WN = turtle.Screen()
 my_art = turtle.Turtle()
 
 # Définir la longueur et l'angle pour une branche
-longueur_branche = 100
-angle_branche = 144
+LONGUEUR_BRANCHE = 100
+ANGLE_BRANCHE = 144
 
 # Dessiner une seule étoile
-dessiner_branche(longueur_branche, angle_branche)
+dessiner_branche(LONGUEUR_BRANCHE, ANGLE_BRANCHE)
 
 # Fermer la fenêtre en cliquant
-wn.exitonclick()
+WN.exitonclick()
 
 
-#----------------------------------------------------------------------------------------------branche 5 étoiles sans fond
+#-------branche 5 étoiles sans fond
 # import turtle
 
 # vm = turtle.Screen()
@@ -54,8 +54,7 @@ wn.exitonclick()
 # turtle.exitonclick()
 
 
-#----------------------------------------------------------------------------------------------branche 5 étoiles sans fond
-
+#-------branche 5 étoiles sans fond
 # import turtle
 
 # WN = turtle.Screen()
