@@ -73,13 +73,13 @@ class ScrollableCalculator:
             if '/' in current_text:
                 parts = current_text.split('/')
                 if len(parts) == 2 and parts[1] == '0':
-                    error_message = "Erreur: Mauvaise saisie ou division par 0 impossible"
+                    error_message = "Erreur: Division par 0 impossible"
                     self.display.delete(0, tk.END)
                     self.display.insert(tk.END, error_message)
                     return
 
             # Si aucune division par zéro n'est détectée, afficher le message "Erreur"
-            error_message = "Mauvaise saisie ou division par 0 impossible"
+            error_message = "Mauvaise saisie"
             self.display.delete(0, tk.END)
             self.display.insert(tk.END, error_message)
 
