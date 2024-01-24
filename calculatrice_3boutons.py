@@ -15,25 +15,25 @@ class ScrollableCalculator:
 
         self.character_list = ['0', '1', '2', '3', '4', '5',
                             '6', '7', '8', '9', '+', '-',
-                            '*', '/', '=', 'R', ')', '(']
+                            '*', '/', '=', 'R', '(', ')', '.', '%']
         self.current_index = 0
         self.choices = []
 
-        self.display = tk.Entry(master, width=10, font=('Arial', 14))
+        self.display = tk.Entry(master, width=20, font=('Arial', 18))
         self.display.grid(row=0, column=0, columnspan=3, pady=5)
 
         # Boutons pour faire défiler la liste
-        tk.Button(master, text='↑', width=4, height=2,
+        tk.Button(master, text='↑', width=6, height=4,
                 command=lambda: self.scroll(1)).grid(row=1, column=0)
-        tk.Button(master, text='↓', width=4, height=2,
+        tk.Button(master, text='↓', width=6, height=4,
                 command=lambda: self.scroll(-1)).grid(row=2, column=0)
 
         # Bouton pour valider le choix
-        tk.Button(master, text='Valider', width=10, height=2,
+        tk.Button(master, text='Valider', width=12, height=4,
                 command=self.validate_choice).grid(row=1, column=1, rowspan=2)
 
         self.history_text = []
-        self.last_clicked = None  # Initialiser last_clicked ici
+        self.last_clicked = None  
 
     def scroll(self, direction):
         """
