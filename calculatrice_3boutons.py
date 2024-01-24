@@ -33,7 +33,9 @@ class ScrollableCalculator:
                 command=self.validate_choice).grid(row=1, column=1, rowspan=2)
 
         self.history_text = []
-        self.last_clicked = None  
+        self.last_clicked = None
+        # Désactiver l'utilisation du clavier
+        master.bind("<Key>", lambda e: "break")
 
     def scroll(self, direction):
         """
