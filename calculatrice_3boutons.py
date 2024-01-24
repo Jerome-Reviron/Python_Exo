@@ -19,7 +19,7 @@ class ScrollableCalculator:
         self.current_index = 0
         self.choices = []
 
-        self.display = tk.Entry(master, width=30, font=('Arial', 18))
+        self.display = tk.Entry(master, width=50, font=('Arial', 18))
         self.display.grid(row=0, column=0, columnspan=3, pady=5)
 
         # Boutons pour faire défiler la liste
@@ -73,13 +73,13 @@ class ScrollableCalculator:
             if '/' in current_text:
                 parts = current_text.split('/')
                 if len(parts) == 2 and parts[1] == '0':
-                    error_message = "Erreur: Division par zéro impossible"
+                    error_message = "Erreur: Mauvaise saisie ou division par 0 impossible"
                     self.display.delete(0, tk.END)
                     self.display.insert(tk.END, error_message)
                     return
 
             # Si aucune division par zéro n'est détectée, afficher le message "Erreur"
-            error_message = "Division par 0 impossible"
+            error_message = "Mauvaise saisie ou division par 0 impossible"
             self.display.delete(0, tk.END)
             self.display.insert(tk.END, error_message)
 
@@ -89,7 +89,7 @@ class ScrollableCalculator:
             self.display.insert(tk.END, new_text)
 
         self.last_clicked = selected_char  # Mettre à jour le dernier caractère cliqué
-        
+
     def reset_application(self):
         """
         Réinitialise l'état de l'application.
