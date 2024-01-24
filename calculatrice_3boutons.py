@@ -59,7 +59,8 @@ class ScrollableCalculator:
         une tentative d'évaluation de l'expression est effectuée, et le résultat est affiché.
         Sinon, le caractère sélectionné est ajouté à l'affichage actuel.
 
-        En cas de division par zéro ou d'erreur de syntaxe, un message d'erreur approprié est affiché.
+        En cas de division par zéro ou d'erreur de syntaxe,
+        un message d'erreur approprié est affiché.
         """
         selected_char = self.character_list[self.current_index]
         current_text = self.display.get()
