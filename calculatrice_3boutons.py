@@ -19,7 +19,7 @@ class ScrollableCalculator:
         self.current_index = 0
         self.choices = []
 
-        self.display = tk.Entry(master, width=20, font=('Arial', 18))
+        self.display = tk.Entry(master, width=30, font=('Arial', 18))
         self.display.grid(row=0, column=0, columnspan=3, pady=5)
 
         # Boutons pour faire défiler la liste
@@ -67,15 +67,19 @@ class ScrollableCalculator:
             return
 
         if selected_char == '=':
-            try:
-                result = eval(current_text.replace('=', '')) # pylint: disable=W0123
-                self.choices.append(result)
-                self.display.delete(0, tk.END)
-                self.display.insert(tk.END, str(result))
-            except ValueError as ve:
-                print("Error:", ve)
-                self.display.delete(0, tk.END)
-                self.display.insert(tk.END, "Erreur")
+            # Vérifier la division par zéro
+            if '/' in current_text:
+                parts = current_text.split('/')
+                if len(parts) == 2 and parts[1] == '0':
+                    error_message = "Erreur: Division par zéro impossible"
+                    self.display.delete(0, tk.END)
+                    self.display.insert(tk.END, error_message)
+                    return
+
+            # Si aucune division par zéro n'est détectée, afficher le message "Erreur"
+            error_message = "Division par 0 impossible"
+            self.display.delete(0, tk.END)
+            self.display.insert(tk.END, error_message)
 
         else:
             new_text = current_text + selected_char
@@ -83,7 +87,7 @@ class ScrollableCalculator:
             self.display.insert(tk.END, new_text)
 
         self.last_clicked = selected_char  # Mettre à jour le dernier caractère cliqué
-
+        
     def reset_application(self):
         """
         Réinitialise l'état de l'application.
