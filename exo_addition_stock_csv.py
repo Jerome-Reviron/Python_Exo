@@ -56,3 +56,20 @@ df = pd.DataFrame(results_list)
 
 # Afficher le DataFrame
 print(df)
+
+# #---------Correction Johlan
+# def addition(x=0, y=0):
+#     """ Additionne les deux nombres
+#     Args:
+#         x (int): nombre a additionner
+#         y (int): nombre a additionner
+#     Returns:
+#         str: Message d'erreur
+#         int: resultat de l'addition
+#     """
+#     if type(x) not in [int,float] or type(y) not in [int,float]:
+#         return "Entrez seulement des nombres" 
+#     else:
+#         data = pd.DataFrame({'Numero X': [x] ,'Numero Y': [y] ,'Resultat': [(x+y)]})
+#         data.to_csv('addition.csv',mode='a',index='Numero X',header=False)
+#         return x + y
