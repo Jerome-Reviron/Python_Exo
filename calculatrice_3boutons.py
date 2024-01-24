@@ -19,7 +19,7 @@ class ScrollableCalculator:
         self.current_index = 0
         self.choices = []
 
-        self.display = tk.Entry(master, width=20, font=('Arial', 18))
+        self.display = tk.Entry(master, width=50, font=('Arial', 18))
         self.display.grid(row=0, column=0, columnspan=3, pady=5)
 
         # Boutons pour faire défiler la liste
@@ -59,7 +59,8 @@ class ScrollableCalculator:
         une tentative d'évaluation de l'expression est effectuée, et le résultat est affiché.
         Sinon, le caractère sélectionné est ajouté à l'affichage actuel.
 
-        En cas d'erreur lors de l'évaluation, un message d'erreur est affiché.
+        En cas de division par zéro ou d'erreur de syntaxe,
+        un message d'erreur approprié est affiché.
         """
         selected_char = self.character_list[self.current_index]
         current_text = self.display.get()
@@ -71,10 +72,27 @@ class ScrollableCalculator:
 
         if selected_char == '=':
             try:
+                # Vérifier la division par zéro
+                if '/' in current_text:
+                    parts = current_text.split('/')
+                    if len(parts) == 2 and parts[1] == '0':
+                        raise ZeroDivisionError("Division par zéro impossible")
+
+                # Vérifier la validité de l'expression avant l'évaluation
+                eval(current_text.replace('=', ''))  # pylint: disable=W0123
+
                 result = eval(current_text.replace('=', '')) # pylint: disable=W0123
                 self.choices.append(result)
                 self.display.delete(0, tk.END)
                 self.display.insert(tk.END, str(result))
+            except ZeroDivisionError:
+                error_message = "Division par zéro impossible"
+                self.display.delete(0, tk.END)
+                self.display.insert(tk.END, error_message)
+            except SyntaxError:
+                error_message = "Erreur de syntaxe"
+                self.display.delete(0, tk.END)
+                self.display.insert(tk.END, error_message)
             except ValueError as ve:
                 print("Error:", ve)
                 self.display.delete(0, tk.END)
