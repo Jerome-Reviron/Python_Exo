@@ -45,7 +45,7 @@ La calculatrice est conçue pour fonctionner avec trois boutons principaux et pe
 4. Appuyez sur le bouton "Valider" pour confirmer chaque choix de caractère.
 5. Explorez les fonctionnalités de la calculatrice et redémarrez l'application au besoin.
 
-### Ensemble de calculs Possible
+### Ensemble de calculs possible
 - Addition simple avec des Int
 - Addition avec des Float
 - Soustraction simple(Int & Float)
