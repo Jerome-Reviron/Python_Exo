@@ -19,7 +19,7 @@ class ScrollableCalculator:
         self.current_index = 0
         self.choices = []
 
-        self.display = tk.Entry(master, width=50, font=('Arial', 18))
+        self.display = tk.Entry(master, width=20, font=('Arial', 18))
         self.display.grid(row=0, column=0, columnspan=3, pady=5)
 
         # Boutons pour faire défiler la liste
@@ -33,6 +33,7 @@ class ScrollableCalculator:
                 command=self.validate_choice).grid(row=1, column=1, rowspan=2)
 
         self.history_text = []
+        self.last_clicked = None
         self.last_clicked = None
         # Désactiver l'utilisation du clavier
         master.bind("<Key>", lambda e: "break")
@@ -69,19 +70,15 @@ class ScrollableCalculator:
             return
 
         if selected_char == '=':
-            # Vérifier la division par zéro
-            if '/' in current_text:
-                parts = current_text.split('/')
-                if len(parts) == 2 and parts[1] == '0':
-                    error_message = "Erreur: Division par 0 impossible"
-                    self.display.delete(0, tk.END)
-                    self.display.insert(tk.END, error_message)
-                    return
-
-            # Si aucune division par zéro n'est détectée, afficher le message "Erreur"
-            error_message = "Mauvaise saisie"
-            self.display.delete(0, tk.END)
-            self.display.insert(tk.END, error_message)
+            try:
+                result = eval(current_text.replace('=', '')) # pylint: disable=W0123
+                self.choices.append(result)
+                self.display.delete(0, tk.END)
+                self.display.insert(tk.END, str(result))
+            except ValueError as ve:
+                print("Error:", ve)
+                self.display.delete(0, tk.END)
+                self.display.insert(tk.END, "Erreur")
 
         else:
             new_text = current_text + selected_char
