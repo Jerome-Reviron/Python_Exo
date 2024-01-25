@@ -53,6 +53,51 @@ class FromageETL:
         data_from_db = pd.read_sql_query(f"SELECT * from {table_name}", con)
         con.close()
         return data_from_db
+    
+    def get_fromage_names(self, database_name, table_name):
+        con = sqlite3.connect(database_name)
+        data_from_db = pd.read_sql_query(f"SELECT fromage_names from {table_name}", con)
+        con.close()
+        return data_from_db
+
+    def get_fromage_familles(self, database_name, table_name):
+        con = sqlite3.connect(database_name)
+        data_from_db = pd.read_sql_query(f"SELECT fromage_familles from {table_name}", con)
+        con.close()
+        return data_from_db
+
+    def get_pates(self, database_name, table_name):
+        con = sqlite3.connect(database_name)
+        data_from_db = pd.read_sql_query(f"SELECT pates from {table_name}", con)
+        con.close()
+        return data_from_db
+
+    def connect_to_database(self, database_name):
+        con = sqlite3.connect(database_name)
+        return con
+
+    def add_row(self, fromage_name, fromage_famille, pate):
+        new_row = pd.DataFrame({'fromage_names': [fromage_name], 
+            'fromage_familles': [fromage_famille], 'pates': [pate]})
+        self.data = pd.concat([self.data, new_row], ignore_index=True)
+
+    def sort_ascending(self):
+        self.data = self.data.sort_values(by=['fromage_names'])
+
+    def sort_descending(self):
+        self.data = self.data.sort_values(by=['fromage_names'], ascending=False)
+
+    def total_count(self):
+        return len(self.data)
+
+    def count_by_letter(self):
+        return self.data['fromage_names'].str[0].value_counts()
+
+    def update_fromage_name(self, old_name, new_name):
+        self.data.loc[self.data.fromage_names == old_name, 'fromage_names'] = new_name
+
+    def delete_row(self, fromage_name):
+        self.data = self.data[self.data.fromage_names != fromage_name]
 
 # Utilisation de la classe
 fromage_etl = FromageETL('https://www.laboitedufromager.com/liste-des-fromages-par-ordre-alphabetique/')
