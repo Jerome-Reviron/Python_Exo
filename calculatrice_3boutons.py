@@ -34,7 +34,7 @@ class ScrollableCalculator:
 
         self.history_text = []
         self.last_clicked = None
-        self.last_clicked = None
+
         # Désactiver l'utilisation du clavier
         master.bind("<Key>", lambda e: "break")
 
