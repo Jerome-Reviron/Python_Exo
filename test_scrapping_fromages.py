@@ -1,15 +1,45 @@
-import pandas as pd
+"""
+Module de tests pour le script scrapping_fromage.py
+
+Ce module contient des tests unitaires pour la classe FromageETL du script scrapping_fromage.py.
+Les tests sont écrits en utilisant le framework de test pytest.
+
+Avertissement:
+- Ce module nécessite l'installation de pandas, sqlite3 et pytest.
+- Certains tests utilisent la fonction patch du module unittest.mock
+pour simuler le comportement de certaines fonctions.
+
+Usage:
+- Exécutez le script en utilisant pytest pour exécuter tous les tests définis dans ce module.
+
+Exemple:
+    $ pytest test_scrapping_fromages.py
+"""
+
 import sqlite3
 import pytest
 from unittest.mock import patch, Mock
 from scrapping_fromage import FromageETL
+import pandas as pd
 
 @pytest.fixture
 def etl_instance():
+    """
+    Fixture pour créer une instance de FromageETL pour les tests unitaires.
+
+    Returns:
+    - FromageETL: Une instance classe FromageETL avec l'URL spécifiée.
+    """
     return FromageETL("https://www.laboitedufromager.com/liste-des-fromages-par-ordre-alphabetique/")
 
 @patch('scrapping_fromage.urlopen')
 def test_extract(mock_urlopen, etl_instance):
+    """
+    Test unitaire pour la méthode extract de la classe FromageETL.
+
+    Utilise le décorateur @patch pour simuler le comportement de la fonction urlopen.
+    Assure que la méthode extract récupère correctement les données depuis l'URL.
+    """
     # Configurez le comportement simulé de urlopen
     mock_urlopen.return_value.read.return_value = b"<html><body>Mocked HTML</body></html>"
     # Appelez la méthode extract
@@ -18,6 +48,11 @@ def test_extract(mock_urlopen, etl_instance):
     assert etl_instance.data == b"<html><body>Mocked HTML</body></html>"
 
 def test_transform(etl_instance):
+    """
+    Test unitaire pour la méthode transform de la classe FromageETL.
+
+    Assure que la méthode transform effectue correctement la transformation des données.
+    """
     # Définissez les données de test
     test_data = b"<table><tr><td>Fromage1</td><td>Famille1</td><td>Pate1</td></tr></table>"
     etl_instance.data = test_data
@@ -29,6 +64,11 @@ def test_transform(etl_instance):
     assert etl_instance.data['pates'].iloc[0] == "Pate1"
 
 def test_load_and_read_from_database(etl_instance, tmp_path):
+    """
+    Test unitaire pour les méthodes load et read_from_database de la classe FromageETL.
+
+    Assure que les données chargées dans la base de données correspondent aux données initiales.
+    """
     # Appelez extract et transform avant d'accéder à etl_instance.data
     etl_instance.extract()
     etl_instance.transform()
@@ -47,6 +87,11 @@ def test_load_and_read_from_database(etl_instance, tmp_path):
     assert data_from_db['pates'].tolist() == etl_instance.data['pates'].tolist()
 
 def test_get_fromage_names(etl_instance):
+    """
+    Test unitaire pour la méthode get_fromage_names de la classe FromageETL.
+
+    Charge les données dans une table SQLite spécifiée et assure que la méthode renvoie les noms de fromages corrects.
+    """
     # Appelez extract et transform avant d'accéder à etl_instance.data
     etl_instance.extract()
     etl_instance.transform()
@@ -58,6 +103,11 @@ def test_get_fromage_names(etl_instance):
     assert etl_instance.get_fromage_names('fromages_bdd.sqlite', 'fromages_table')['fromage_names'].values.tolist() == expected_names
 
 def test_get_fromage_familles(etl_instance):
+    """
+    Test unitaire pour la méthode get_fromage_familles de la classe FromageETL.
+
+    Charge les données dans une table SQLite spécifiée et assure que la méthode renvoie les familles de fromages correctes.
+    """
     # Appelez extract et transform avant d'accéder à etl_instance.data
     etl_instance.extract()
     etl_instance.transform()
@@ -69,6 +119,11 @@ def test_get_fromage_familles(etl_instance):
     assert etl_instance.get_fromage_familles('fromages_bdd.sqlite', 'fromages_table')['fromage_familles'].values.tolist() == expected_familles
 
 def test_get_pates(etl_instance):
+    """
+    Test unitaire pour la méthode get_pates de la classe FromageETL.
+
+    Charge les données dans une table SQLite spécifiée et assure que la méthode renvoie les pâtes de fromages correctes.
+    """
     # Appelez extract et transform avant d'accéder à etl_instance.data
     etl_instance.extract()
     etl_instance.transform()
@@ -80,10 +135,20 @@ def test_get_pates(etl_instance):
     assert etl_instance.get_pates('fromages_bdd.sqlite', 'fromages_table')['pates'].values.tolist() == expected_pates
 
 def test_connect_to_database(etl_instance):
+    """
+    Test unitaire pour la méthode connect_to_database de la classe FromageETL.
+
+    Assure que la méthode établit une connexion à la base de données spécifiée.
+    """
     con = etl_instance.connect_to_database('fromages_bdd.sqlite')
     assert con is not None
 
 def test_add_row(etl_instance):
+    """
+    Test unitaire pour la méthode add_row de la classe FromageETL.
+
+    Assure que la méthode ajoute une ligne aux données, et la longueur des données augmente d'un.
+    """
     etl_instance.extract()
     etl_instance.transform()
     initial_len = len(etl_instance.data)
@@ -91,6 +156,11 @@ def test_add_row(etl_instance):
     assert len(etl_instance.data) == initial_len + 1
 
 def test_sort_ascending(etl_instance):
+    """
+    Test unitaire pour la méthode sort_ascending de la classe FromageETL.
+
+    Assure que la méthode trie les noms de fromages par ordre croissant.
+    """
     etl_instance.extract()
     etl_instance.transform()
     etl_instance.sort_ascending()
@@ -98,6 +168,11 @@ def test_sort_ascending(etl_instance):
     assert sorted_names == sorted(sorted_names)
 
 def test_sort_descending(etl_instance):
+    """
+    Test unitaire pour la méthode sort_descending de la classe FromageETL.
+
+    Assure que la méthode trie les noms de fromages par ordre décroissant.
+    """
     etl_instance.extract()
     etl_instance.transform()
     etl_instance.sort_descending()
@@ -105,18 +180,33 @@ def test_sort_descending(etl_instance):
     assert sorted_names == sorted(sorted_names, reverse=True)
 
 def test_total_count(etl_instance):
+    """
+    Test unitaire pour la méthode total_count de la classe FromageETL.
+
+    Assure que la méthode renvoie le nombre total d'enregistrements dans les données.
+    """
     etl_instance.extract()
     etl_instance.transform()
     count = etl_instance.total_count()
     assert count == len(etl_instance.data)
 
 def test_count_by_letter(etl_instance):
+    """
+    Test unitaire pour la méthode count_by_letter de la classe FromageETL.
+
+    Assure que la méthode renvoie des comptages de noms de fromages par lettre.
+    """
     etl_instance.extract()
     etl_instance.transform()
     counts = etl_instance.count_by_letter()
     assert counts is not None
 
 def test_delete_row(etl_instance):
+    """
+    Test unitaire pour la méthode delete_row de la classe FromageETL.
+
+    Assure que la méthode supprime correctement une ligne des données, et la longueur des données diminue d'un.
+    """
     etl_instance.extract()
     etl_instance.transform()
     etl_instance.add_row('Test Fromage', 'Test Famille', 'Test Pate')
@@ -125,11 +215,45 @@ def test_delete_row(etl_instance):
     assert len(etl_instance.data) == initial_len - 1
 
 def test_update_fromage_name(etl_instance):
+    """
+    Test unitaire pour la méthode update_fromage_name de la classe FromageETL.
+
+    Assure que la méthode met à jour correctement le nom d'un fromage dans les données.
+    """
     etl_instance.extract()
     etl_instance.transform()
     etl_instance.add_row('Test Fromage', 'Test Famille', 'Test Pate')
     etl_instance.update_fromage_name('Test Fromage', 'Updated Fromage')
     assert 'Updated Fromage' in etl_instance.data['fromage_names'].values
 
+def test_group_and_count_by_first_letter(etl_instance, tmp_path):
+    """
+    Test unitaire pour la méthode group_and_count_by_first_letter de la classe FromageETL.
+
+    Assure que la méthode renvoie un DataFrame non vide avec les colonnes 'lettre_alpha_full' et 'fromage_nb'.
+    """
+    # Extract et transform avant d'accéder à etl_instance.data
+    etl_instance.extract()
+    etl_instance.transform()
+    # Chargement des données dans la base de données
+    etl_instance.load(tmp_path / "fromages_bdd.sqlite", "fromages_table")
+
+    # Appel de la nouvelle fonction pour obtenir le résultat
+    result = etl_instance.group_and_count_by_first_letter(tmp_path / "fromages_bdd.sqlite", "fromages_table")
+
+    # Vérification du résultat est un DataFrame
+    assert isinstance(result, pd.DataFrame)
+
+    # Vérification des colonnes 'lettre_alpha_full' et 'fromage_nb' présentes dans le DataFrame résultat
+    assert 'lettre_alpha_full' in result.columns
+    assert 'fromage_nb' in result.columns
+
+    # Vérification que DataFrame résultat n'est pas vide
+    assert not result.empty
+
+    # Résultat dans le terminal
+    print("Résultat du test_group_and_count_by_first_letter:")
+    print(result)
+    
 if __name__ == '__main__':
     pytest.main()
